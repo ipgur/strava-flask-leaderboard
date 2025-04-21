@@ -107,32 +107,39 @@ def all_stats():
             user.token_expires_at = datetime.utcfromtimestamp(t["expires_at"])
             db.session.commit()
 
-        r = requests.get(
-            "https://www.strava.com/api/v3/athletes/{}/stats".format(user.strava_id),
+        # Get athlete profile (for avatar, name, etc.)
+        athlete_response = requests.get(
+            "https://www.strava.com/api/v3/athlete",
             headers={"Authorization": f"Bearer {user.access_token}"}
         )
 
-        if r.status_code == 200:
-            data  = r.json()
-            print(data)  # Add this line to inspect the structure		    
+        # Get athlete stats (run distance, etc.)
+        stats_response = requests.get(
+            f"https://www.strava.com/api/v3/athletes/{user.strava_id}/stats",
+            headers={"Authorization": f"Bearer {user.access_token}"}
+        )
 
-            # Get YTD running totals
+        if athlete_response.status_code == 200 and stats_response.status_code == 200:
+            athlete = athlete_response.json()
+            data = stats_response.json()
+
+            # Extract YTD run stats
             ytd_run_totals = data.get('ytd_run_totals', {})
-            print(ytd_run_totals)
-
-            # Extract total distance for the current year in meters
             total_meters = ytd_run_totals.get('distance', 0)
             total_runs = ytd_run_totals.get('count', 0)
             total_time = ytd_run_totals.get('moving_time', 0) / 3600
 
             # Convert meters to kilometers
-            total_kms = total_meters / 1000  # Convert meters to kilometers
+            total_kms = total_meters / 1000
+
             stats.append({
-                "name": f"{user.firstname} {user.lastname}",
-                "kms": round(total_kms, 2),  # Round to 2 decimal places
-                "count": round(total_runs, 2),  # Round to 2 decimal places
-                "time": round(total_time, 2),  # Round to 2 decimal places
-            }) 
+                "name": f"{athlete.get('firstname')} {athlete.get('lastname')}",
+                "avatar": athlete.get("profile_medium"),  # or "profile" for larger
+                "kms": round(total_kms, 2),
+                "count": round(total_runs, 2),
+                "time": round(total_time, 2),
+            })
+
     # Sort stats by 'kms' in descending order (highest kilometers first)
     stats.sort(key=lambda x: x["kms"], reverse=True)
     return render_template("home.html", stats=stats)

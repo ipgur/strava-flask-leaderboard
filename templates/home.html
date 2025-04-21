@@ -47,17 +47,20 @@
             <thead>
                 <tr>
                     <th>Rank</th>
-                    <th>Athlete</th>
-                    <th>Total Distance</th>
-                    <th>Count</th>
-                    <th>Total Time</th>
+                    <th>🏃 Athlete</th>
+                    <th>📏 Distance (km)</th>
+                    <th>🔁 Runs</th>
+                    <th>⏱️ Time (h)</th>
                 </tr>
             </thead>
             <tbody>
                 {% for stat in stats %}
                     <tr>
                         <td>{{ loop.index }}</td>
-                        <td>{{ stat.name }}</td>
+                        <td>
+                            <img src="{{ stat.avatar }}" alt="avatar" style="height: 32px; width: 32px; border-radius: 50%; vertical-align: middle; margin-right: 8px;">
+                            {{ stat.name }}
+                        </td>
                         <td>{{ stat.kms }} km</td>
                         <td>{{ stat.count }}</td>
                         <td>{{ stat.time }} h</td>
