@@ -3,7 +3,6 @@ import requests
 from flask import Flask, redirect, request, session, url_for, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from datetime import datetime, timedelta
 from dotenv import load_dotenv
 from datetime import datetime
 
@@ -38,13 +37,6 @@ class StravaUser(db.Model):
 
 # Get the current year
 current_year = datetime.now().year
-
-
-# Routes
-@app.route("/register")
-def index():
-    return render_template("register.html")
-
 
 @app.route("/login")
 def login():
@@ -93,19 +85,20 @@ def all_stats():
     stats = []
 
     for user in users:
-        if user.token_expires_at < datetime.utcnow():
-            token_url = "https://www.strava.com/oauth/token"
-            resp = requests.post(token_url, data={
-                "client_id": CLIENT_ID,
-                "client_secret": CLIENT_SECRET,
-                "grant_type": "refresh_token",
-                "refresh_token": user.refresh_token,
-            })
-            t = resp.json()
-            user.access_token = t["access_token"]
-            user.refresh_token = t["refresh_token"]
-            user.token_expires_at = datetime.utcfromtimestamp(t["expires_at"])
-            db.session.commit()
+        #if user.token_expires_at < datetime.utcnow():
+        token_url = "https://www.strava.com/oauth/token"
+        resp = requests.post(token_url, data={
+            "client_id": CLIENT_ID,
+            "client_secret": CLIENT_SECRET,
+            "grant_type": "refresh_token",
+            "refresh_token": user.refresh_token,
+        })
+        t = resp.json()
+        user.access_token = t["access_token"]
+        user.refresh_token = t["refresh_token"]
+        user.token_expires_at = datetime.utcfromtimestamp(t["expires_at"])
+        print(t)
+        db.session.commit()
 
         # Get athlete profile (for avatar, name, etc.)
         athlete_response = requests.get(

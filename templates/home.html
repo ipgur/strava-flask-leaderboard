@@ -36,6 +36,16 @@
         tr:nth-child(even) {
             background-color: #f2f2f2;
         }
+        .gold   { background-color: #ffd70033; }  /* Златно, леко прозрачно */
+        .silver { background-color: #c0c0c033; }  /* Сребърно */
+        .bronze { background-color: #cd7f3233; }  /* Бронзово */
+        .avatar {
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
     </style>
 </head>
 <body>
@@ -55,15 +65,26 @@
             </thead>
             <tbody>
                 {% for stat in stats %}
-                    <tr>
-                        <td>{{ loop.index }}</td>
+                <tr class="{% if loop.index == 1 %}gold{% elif loop.index == 2 %}silver{% elif loop.index == 3 %}bronze{% endif %}">
                         <td>
-                            <img src="{{ stat.avatar }}" alt="avatar" style="height: 32px; width: 32px; border-radius: 50%; vertical-align: middle; margin-right: 8px;">
+                            {% if loop.index == 1 %}
+                            🥇
+                            {% elif loop.index == 2 %}
+                            🥈
+                            {% elif loop.index == 3 %}
+                            🥉
+                            {% endif %}
+                            {{ loop.index }}</td>
+                        <td>
+
+                            {% if stat.avatar %}
+                            <img src="{{ stat.avatar }}" class="avatar">
+                            {% endif %}
                             {{ stat.name }}
                         </td>
-                        <td>{{ stat.kms }} km</td>
+                        <td>{{ stat.kms }}</td>
                         <td>{{ stat.count }}</td>
-                        <td>{{ stat.time }} h</td>
+                        <td>{{ stat.time }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
