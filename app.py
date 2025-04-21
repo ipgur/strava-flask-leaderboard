@@ -38,9 +38,9 @@ class StravaUser(db.Model):
 current_year = datetime.now().year
 
 # Routes
-@app.route("/")
+@app.route("/register")
 def index():
-    return render_template("index.html")
+    return render_template("register.html")
 
 
 @app.route("/login")
@@ -84,7 +84,7 @@ def authorized():
     return redirect(url_for("all_stats"))
 
 
-@app.route("/all-stats")
+@app.route("/")
 def all_stats():
     users = StravaUser.query.all()
     stats = []
@@ -129,7 +129,7 @@ def all_stats():
             }) 
     # Sort stats by 'kms' in descending order (highest kilometers first)
     stats.sort(key=lambda x: x["kms"], reverse=True)
-    return render_template("all_stats.html", stats=stats)
+    return render_template("home.html", stats=stats)
 
 
 if __name__ == "__main__":
