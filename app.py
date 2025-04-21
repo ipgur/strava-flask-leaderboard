@@ -16,11 +16,9 @@ app.secret_key = os.getenv("SECRET_KEY", "dev")
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv('DATABASE_URL', 'sqlite:///strava_users.db').replace('postgres://', 'postgresql://')
 print(app.config["SQLALCHEMY_DATABASE_URI"])
 db = SQLAlchemy(app)
+db.create_all()
 migrate = Migrate(app, db)
 
-@app.before_first_request
-def create_tables():
-    db.create_all()
 
 # Strava config
 CLIENT_ID = os.getenv("STRAVA_CLIENT_ID")
@@ -41,6 +39,7 @@ class StravaUser(db.Model):
 
 # Get the current year
 current_year = datetime.now().year
+
 
 # Routes
 @app.route("/register")
