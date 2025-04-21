@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Postrume Strava Leaderboard (от изток) </title>
+</head>
+<body>
+    <h1>🏃 Поструме Strava Leaderboard</h1>
+    <table border="1" cellpadding="8">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Athlete</th>
+                <th>Total KMs Run</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for stat in stats %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ stat.name }}</td>
+                    <td>{{ stat.kms }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
+
