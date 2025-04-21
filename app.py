@@ -16,7 +16,6 @@ app.secret_key = os.getenv("SECRET_KEY", "dev")
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv('DATABASE_URL', 'sqlite:///strava_users.db').replace('postgres://', 'postgresql://')
 print(app.config["SQLALCHEMY_DATABASE_URI"])
 db = SQLAlchemy(app)
-db.create_all()
 migrate = Migrate(app, db)
 
 
