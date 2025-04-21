@@ -13,7 +13,7 @@ app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "dev")
 
 # DB setup
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///strava_users.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv('DATABASE_URL', 'sqlite:///strava_users.db')
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
