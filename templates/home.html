@@ -2,33 +2,87 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Postrume Strava Leaderboard (от изток) </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Postrume (aka avatar-technologies aka trahun.bg aka dokladvai.me aka sbornikstrumski) Strava Leaderboard (от изток)</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+
+    <!-- jQuery (necessary for DataTables) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+    <!-- DataTables JS -->
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+
+    <!-- Custom styles (optional) -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+        table {
+            margin-top: 20px;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
 </head>
 <body>
-    <h1>🏃 Поструме Strava Leaderboard</h1>
-    <table border="1" cellpadding="8">
-        <thead>
-            <tr>
-                <th>Rank</th>
-                <th>Athlete</th>
-                <th>Total KMs Run</th>
-                <th>Total Runs</th>
-                <th>Moving Time </th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for stat in stats %}
+
+    <h1>🏃 Поструме <p style="font-size: 14px">(aka avatar-technologies aka trahun.bg aka dokladvai.me aka sbornikstrumski)</p> Strava Leaderboard (от изток)</h1>
+
+    <div class="container">
+        <table id="statsTable" class="table table-bordered table-striped">
+            <thead>
                 <tr>
-                    <td>{{ loop.index }}</td>
-                    <td>{{ stat.name }}</td>
-                    <td>{{ stat.kms }}</td>
-                    <td>{{ stat.count }}</td>
-                    <td>{{ stat.time }}</td>
+                    <th>Rank</th>
+                    <th>Athlete</th>
+                    <th>Total Distance</th>
+                    <th>Count</th>
+                    <th>Total Time</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-<br/>
-<a href="{{ url_for('login') }}">Add yourself to the Поструме Strava Leaderboard</a>
+            </thead>
+            <tbody>
+                {% for stat in stats %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ stat.name }}</td>
+                        <td>{{ stat.kms }} km</td>
+                        <td>{{ stat.count }}</td>
+                        <td>{{ stat.time }} h</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <br/>
+    <div class="text-center">
+        <a href="{{ url_for('login') }}" class="btn btn-primary">Add yourself to the Поструме Strava Leaderboard</a>
+    </div>
+
+
+    <!-- Footer -->
+    <footer>
+         <p style="text-align: right;margin-right:20px;">Created by <strong>Ильо Кочеринов</strong> | <a href="https://github.com/ipgur" target="_blank">https://github.com/ipgur</a></p>
+    </footer>
+
+    <!-- Initialize DataTables -->
+    <script>
+        $(document).ready(function () {
+            $('#statsTable').DataTable();
+        });
+    </script>
 </body>
 </html>
