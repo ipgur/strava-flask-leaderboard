@@ -119,13 +119,16 @@ def all_stats():
 
             # Extract total distance for the current year in meters
             total_meters = ytd_run_totals.get('distance', 0)
-            print(total_meters)
+            total_runs = ytd_run_totals.get('count', 0)
+            total_time = ytd_run_totals.get('moving_time', 0) / 3600
 
             # Convert meters to kilometers
             total_kms = total_meters / 1000  # Convert meters to kilometers
             stats.append({
                 "name": f"{user.firstname} {user.lastname}",
-                "kms": round(total_kms, 2)  # Round to 2 decimal places
+                "kms": round(total_kms, 2),  # Round to 2 decimal places
+                "count": round(total_runs, 2),  # Round to 2 decimal places
+                "time": round(total_time, 2),  # Round to 2 decimal places
             }) 
     # Sort stats by 'kms' in descending order (highest kilometers first)
     stats.sort(key=lambda x: x["kms"], reverse=True)

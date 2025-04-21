@@ -12,6 +12,8 @@
                 <th>Rank</th>
                 <th>Athlete</th>
                 <th>Total KMs Run</th>
+                <th>Total Runs</th>
+                <th>Moving Time </th>
             </tr>
         </thead>
         <tbody>
@@ -20,6 +22,8 @@
                     <td>{{ loop.index }}</td>
                     <td>{{ stat.name }}</td>
                     <td>{{ stat.kms }}</td>
+                    <td>{{ stat.count }}</td>
+                    <td>{{ stat.time }}</td>
                 </tr>
             {% endfor %}
         </tbody>
