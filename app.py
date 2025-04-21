@@ -18,6 +18,10 @@ print(app.config["SQLALCHEMY_DATABASE_URI"])
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
+@app.before_first_request
+def create_tables():
+    db.create_all()
+
 # Strava config
 CLIENT_ID = os.getenv("STRAVA_CLIENT_ID")
 CLIENT_SECRET = os.getenv("STRAVA_CLIENT_SECRET")
