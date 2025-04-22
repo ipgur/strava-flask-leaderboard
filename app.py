@@ -124,7 +124,7 @@ def all_stats():
 
         # Fetch the latest activities (1 activity, sorted by date)
         activity_url = 'https://www.strava.com/api/v3/athlete/activities'
-        params = {'per_page': 1, 'page': 1}
+        params = {'per_page': 5, 'page': 1}
         activities_response = requests.get(activity_url, headers={"Authorization": f"Bearer {user.access_token}"}, params=params)
 
         if (athlete_response.status_code == 200 and stats_response.status_code == 200 and
@@ -132,7 +132,6 @@ def all_stats():
             athlete = athlete_response.json()
             data = stats_response.json()
             activities = activities_response.json()
-            print(activities)
             # Extract YTD run stats
             ytd_run_totals = data.get('ytd_run_totals', {})
             elevation_gain = ytd_run_totals.get('elevation_gain', 0)
@@ -153,14 +152,18 @@ def all_stats():
             })
 
             # Get the latest run activity and decode the polyline
-            latest_run = next((activity for activity in activities if activity['type'] == 'Run'), None)
+            latest_run = None
+            for activity in activities:
+                if activity['type'] == 'Run':  # Only consider activities of type 'Run'
+                    latest_run = activity
+                    break  # Stop once the latest run is found
 
             if latest_run:
                 polyline_str = latest_run['map']['summary_polyline']
                 decoded_polyline = polyline.decode(polyline_str)
                 user_runs.append({'user': f"{athlete.get('firstname')} {athlete.get('lastname')}", 'run': latest_run,
                                   'coordinates': decoded_polyline})
-            print(user_runs)
+            #print(user_runs)
     # Sort stats by 'kms' in descending order (highest kilometers first)
     stats.sort(key=lambda x: x["kms"], reverse=True)
     return render_template("home.html", stats=stats, user_runs=user_runs, current_year=datetime.utcnow().year)
