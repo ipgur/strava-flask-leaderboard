@@ -163,7 +163,7 @@ def all_stats():
                 decoded_polyline = polyline.decode(polyline_str)
                 user_runs.append({'user': f"{athlete.get('firstname')} {athlete.get('lastname')}", 'run': latest_run,
                                   'coordinates': decoded_polyline})
-            #print(user_runs)
+            print(user_runs)
     # Sort stats by 'kms' in descending order (highest kilometers first)
     stats.sort(key=lambda x: x["kms"], reverse=True)
     return render_template("home.html", stats=stats, user_runs=user_runs, current_year=datetime.utcnow().year)
