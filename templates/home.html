@@ -147,7 +147,10 @@
         <h2>Latest Runs Feed</h2>
         {% for user_run in user_runs %}
         <div class="feed-item">
-            <h3>{{ user_run.user }} - {{ user_run.run.name }}</h3>
+            <h3> {% if user_run.avatar %}
+                    <img src="{{ user_run.avatar }}" class="avatar">
+                 {% endif %} {{ user_run.user }} - {{ user_run.run.name }}
+            </h3>
             <!-- Add Run Date -->
             <p><strong>Date:</strong> {{ user_run.run.start_date_local }}</p>
             <p><strong>Distance:</strong> {{ user_run.run.distance / 1000 }} km</p>
