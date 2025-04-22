@@ -85,20 +85,28 @@ def all_stats():
     stats = []
 
     for user in users:
-        #if user.token_expires_at < datetime.utcnow():
-        token_url = "https://www.strava.com/oauth/token"
-        resp = requests.post(token_url, data={
-            "client_id": CLIENT_ID,
-            "client_secret": CLIENT_SECRET,
-            "grant_type": "refresh_token",
-            "refresh_token": user.refresh_token,
-        })
-        t = resp.json()
-        user.access_token = t["access_token"]
-        user.refresh_token = t["refresh_token"]
-        user.token_expires_at = datetime.utcfromtimestamp(t["expires_at"])
-        print(t)
-        db.session.commit()
+
+        if user.token_expires_at < datetime.utcnow():
+            token_url = "https://www.strava.com/oauth/token"
+            resp = requests.post(token_url, data={
+                "client_id": CLIENT_ID,
+                "client_secret": CLIENT_SECRET,
+                "grant_type": "refresh_token",
+                "refresh_token": user.refresh_token,
+            })
+
+            if resp.status_code != 200:
+                print(f"Skipping user {user.id}: failed to refresh token (status {resp.status_code})")
+                continue  # Skip this user
+            try:
+                t = resp.json()
+                user.access_token = t["access_token"]
+                user.refresh_token = t["refresh_token"]
+                user.token_expires_at = datetime.utcfromtimestamp(t["expires_at"])
+                db.session.commit()
+            except (KeyError, ValueError) as e:
+                print(f"Skipping user {user.id}: invalid token response: {e}")
+                continue
 
         # Get athlete profile (for avatar, name, etc.)
         athlete_response = requests.get(
@@ -115,9 +123,10 @@ def all_stats():
         if athlete_response.status_code == 200 and stats_response.status_code == 200:
             athlete = athlete_response.json()
             data = stats_response.json()
-
+            #print(data)
             # Extract YTD run stats
             ytd_run_totals = data.get('ytd_run_totals', {})
+            elevation_gain = ytd_run_totals.get('elevation_gain', 0)
             total_meters = ytd_run_totals.get('distance', 0)
             total_runs = ytd_run_totals.get('count', 0)
             total_time = ytd_run_totals.get('moving_time', 0) / 3600
@@ -129,13 +138,14 @@ def all_stats():
                 "name": f"{athlete.get('firstname')} {athlete.get('lastname')}",
                 "avatar": athlete.get("profile_medium"),  # or "profile" for larger
                 "kms": round(total_kms, 2),
+                "elev_gain": round(elevation_gain, 2),
                 "count": round(total_runs, 2),
                 "time": round(total_time, 2),
             })
 
     # Sort stats by 'kms' in descending order (highest kilometers first)
     stats.sort(key=lambda x: x["kms"], reverse=True)
-    return render_template("home.html", stats=stats)
+    return render_template("home.html", stats=stats, current_year=datetime.utcnow().year)
 
 
 if __name__ == "__main__":

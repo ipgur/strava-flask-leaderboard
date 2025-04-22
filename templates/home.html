@@ -53,7 +53,7 @@
 
     <h1>🏃 Поструме <img src="{{ url_for('static', filename='lav_header.png') }}" alt="BG Lion" class="h-8 inline-block" /> 🇧🇬
 
-        <p style="font-size: 14px">(aka avatar-technologies aka trahun.bg aka dokladvai.me aka sbornikstrumski.com aka strumski.com)</p> Strava Leaderboard (от изток)</h1>
+        <p style="font-size: 14px">(aka avatar-technologies aka trahun.bg aka dokladvai.me aka sbornikstrumski.com aka strumski.com)</p> Strava Leaderboard {{ current_year }} (от изток)</h1>
 
     <div class="container">
         <table id="statsTable" class="table table-bordered table-striped">
@@ -64,6 +64,7 @@
                     <th>📏 Distance (km)</th>
                     <th>🔁 Runs</th>
                     <th>⏱️ Time (h)</th>
+                    <th>⏱️ Elev. Gain (m)</th>
                 </tr>
             </thead>
             <tbody>
@@ -88,6 +89,7 @@
                         <td>{{ stat.kms }}</td>
                         <td>{{ stat.count }}</td>
                         <td>{{ stat.time }}</td>
+                        <td>{{ stat.elev_gain }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
