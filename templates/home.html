@@ -144,7 +144,10 @@
 
     <!-- Feed of Latest Runs -->
     <div class="feed-container">
-        <h2>Latest Runs Feed</h2>
+        <div class="bg-gray-100 p-4 rounded-xl shadow flex items-center justify-between">
+            <h2 class="text-xl font-bold text-gray-900">🏃Latest Runs</h2>
+            <span class="text-sm text-gray-500">Updated just now</span>
+        </div>
         {% for user_run in user_runs %}
         <div class="feed-item">
             <h3> {% if user_run.avatar %}
