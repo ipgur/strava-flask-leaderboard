@@ -161,8 +161,8 @@ def all_stats():
             if latest_run:
                 polyline_str = latest_run['map']['summary_polyline']
                 decoded_polyline = polyline.decode(polyline_str)
-               # user_runs.append({'user': f"{athlete.get('firstname')} {athlete.get('lastname')}", 'run': latest_run,
-               #                   'coordinates': decoded_polyline})
+                user_runs.append({'user': f"{athlete.get('firstname')} {athlete.get('lastname')}", 'run': latest_run,
+                                  'coordinates': decoded_polyline})
             print(user_runs)
     # Sort stats by 'kms' in descending order (highest kilometers first)
     stats.sort(key=lambda x: x["kms"], reverse=True)

@@ -139,11 +139,13 @@
 
     <!-- Feed of Latest Runs -->
     <div class="feed-container">
+        <h2>Latest Runs Feed</h2>
         {% for user_run in user_runs %}
         <div class="feed-item">
             <h3>{{ user_run.user }} - {{ user_run.run.name }}</h3>
             <p><strong>Distance:</strong> {{ user_run.run.distance / 1000 }} km</p>
             <p><strong>Time:</strong> {{ user_run.run.moving_time // 60 }} min {{ user_run.run.moving_time % 60 }} sec</p>
+            {% if user_run.coordinates and user_run.coordinates[0] %}
             <div id="map-feed-{{ loop.index }}" class="map-container"></div>
             <script>
                 // Initialize map for the feed after page load
@@ -158,6 +160,9 @@
                     mapFeed.fitBounds(polylineFeed.getBounds());
                 });
             </script>
+            {% else %}
+            <p>No map available for this run.</p>
+            {% endif %}
         </div>
         {% endfor %}
     </div>
