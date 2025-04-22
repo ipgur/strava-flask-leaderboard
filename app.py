@@ -1,5 +1,7 @@
 import os
 import requests
+import polyline
+
 from flask import Flask, redirect, request, session, url_for, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -83,7 +85,7 @@ def authorized():
 def all_stats():
     users = StravaUser.query.all()
     stats = []
-
+    user_runs = []
     for user in users:
 
         if user.token_expires_at < datetime.utcnow():
@@ -120,10 +122,17 @@ def all_stats():
             headers={"Authorization": f"Bearer {user.access_token}"}
         )
 
-        if athlete_response.status_code == 200 and stats_response.status_code == 200:
+        # Fetch the latest activities (1 activity, sorted by date)
+        activity_url = 'https://www.strava.com/api/v3/athlete/activities'
+        params = {'per_page': 1, 'page': 1}
+        activities_response = requests.get(activity_url, headers={"Authorization": f"Bearer {user.access_token}"}, params=params)
+
+        if (athlete_response.status_code == 200 and stats_response.status_code == 200 and
+                activities_response.status_code == 200):
             athlete = athlete_response.json()
             data = stats_response.json()
-            #print(data)
+            activities = activities_response.json()
+            print(activities)
             # Extract YTD run stats
             ytd_run_totals = data.get('ytd_run_totals', {})
             elevation_gain = ytd_run_totals.get('elevation_gain', 0)
@@ -143,9 +152,18 @@ def all_stats():
                 "time": round(total_time, 2),
             })
 
+            # Get the latest run activity and decode the polyline
+            latest_run = next((activity for activity in activities if activity['type'] == 'Run'), None)
+
+            if latest_run:
+                polyline_str = latest_run['map']['summary_polyline']
+                decoded_polyline = polyline.decode(polyline_str)
+                user_runs.append({'user': f"{athlete.get('firstname')} {athlete.get('lastname')}", 'run': latest_run,
+                                  'coordinates': decoded_polyline})
+            print(user_runs)
     # Sort stats by 'kms' in descending order (highest kilometers first)
     stats.sort(key=lambda x: x["kms"], reverse=True)
-    return render_template("home.html", stats=stats, current_year=datetime.utcnow().year)
+    return render_template("home.html", stats=stats, user_runs=user_runs, current_year=datetime.utcnow().year)
 
 
 if __name__ == "__main__":
