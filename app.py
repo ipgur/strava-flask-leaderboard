@@ -165,7 +165,7 @@ def all_stats():
                                   "avatar": athlete.get("profile"),
                                   'run': latest_run,
                                   'coordinates': decoded_polyline})
-            #print(user_runs)
+            print(stats)
     # Sort stats by 'kms' in descending order (highest kilometers first)
     stats.sort(key=lambda x: x["kms"], reverse=True)
     return render_template("home.html", stats=stats, user_runs=user_runs, current_year=datetime.utcnow().year)
