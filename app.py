@@ -169,7 +169,8 @@ def all_stats():
             print(stats)
     # Sort stats by 'kms' in descending order (highest kilometers first)
     stats.sort(key=lambda x: x["kms"], reverse=True)
-    print(stats)
+    for i, s in enumerate(stats, 1):
+        print(f"{i}. {s['name']} - {s['kms']} km")
     return render_template("home.html", stats=stats, user_runs=user_runs, current_year=datetime.utcnow().year)
 
 
