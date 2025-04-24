@@ -189,7 +189,9 @@
     <!-- Initialize DataTables -->
     <script>
         $(document).ready(function () {
-            $('#statsTable').DataTable();
+            $('#statsTable').DataTable({
+                ordering: false  // 👈 disables auto-sorting
+            });
         });
     </script>
 </body>
