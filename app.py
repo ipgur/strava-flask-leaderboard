@@ -156,6 +156,7 @@ def all_stats():
             for activity in activities:
                 if activity['type'] == 'Run':  # Only consider activities of type 'Run'
                     latest_run = activity
+                    print(latest_run)
                     break  # Stop once the latest run is found
 
             if latest_run:
@@ -168,6 +169,7 @@ def all_stats():
             print(stats)
     # Sort stats by 'kms' in descending order (highest kilometers first)
     stats.sort(key=lambda x: x["kms"], reverse=True)
+    print(stats)
     return render_template("home.html", stats=stats, user_runs=user_runs, current_year=datetime.utcnow().year)
 
 
