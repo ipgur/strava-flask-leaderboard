@@ -95,7 +95,7 @@
         <table id="statsTable" class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th style="width: 50px;">Rank</th>
+                    <th style="width: 15px;">#</th>
                     <th>🏃 Athlete</th>
                     <th>📏 Distance (km)</th>
                     <th>🔁 Runs</th>
@@ -106,7 +106,7 @@
             <tbody>
                 {% for stat in stats %}
                 <tr class="{% if loop.index == 1 %}gold{% elif loop.index == 2 %}silver{% elif loop.index == 3 %}bronze{% endif %}">
-                        <td style="width: 50px; text-align: right;">
+                        <td style="width: 15px; text-align: right;">
                             {% if loop.index == 1 %}
                             🥇
                             {% elif loop.index == 2 %}
