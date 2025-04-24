@@ -154,9 +154,9 @@ def all_stats():
             # Get the latest run activity and decode the polyline
             latest_run = None
             for activity in activities:
-                if activity['type'] == 'Run':  # Only consider activities of type 'Run'
+                if activity['type'] == 'Run' and  activity['start_date'].startswith(str(current_year)):
                     latest_run = activity
-                    print(latest_run)
+                    #print(latest_run)
                     break  # Stop once the latest run is found
 
             if latest_run:
@@ -166,12 +166,12 @@ def all_stats():
                                   "avatar": athlete.get("profile"),
                                   'run': latest_run,
                                   'coordinates': decoded_polyline})
-            print(stats)
+            #print(stats)
     # Sort stats by 'kms' in descending order (highest kilometers first)
     stats.sort(key=lambda x: x["kms"], reverse=True)
     for i, s in enumerate(stats, 1):
         print(f"{i}. {s['name']} - {s['kms']} km")
-    return render_template("home.html", stats=stats, user_runs=user_runs, current_year=datetime.utcnow().year)
+    return render_template("home.html", stats=stats, user_runs=user_runs, current_year=current_year)
 
 
 if __name__ == "__main__":
