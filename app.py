@@ -166,12 +166,15 @@ def all_stats():
                                   "avatar": athlete.get("profile"),
                                   'run': latest_run,
                                   'coordinates': decoded_polyline})
-            #print(stats)
+            print(user_runs)
+
+    # Sort runs by start_date most recent first
+    sorted_runs = sorted(user_runs, key=lambda x: x['run']['start_date'], reverse=True)
     # Sort stats by 'kms' in descending order (highest kilometers first)
     stats.sort(key=lambda x: x["kms"], reverse=True)
     for i, s in enumerate(stats, 1):
         print(f"{i}. {s['name']} - {s['kms']} km")
-    return render_template("home.html", stats=stats, user_runs=user_runs, current_year=current_year)
+    return render_template("home.html", stats=stats, user_runs=sorted_runs, current_year=current_year)
 
 
 if __name__ == "__main__":
