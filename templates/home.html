@@ -157,8 +157,8 @@
                  {% endif %} {{ user_run.user }} - {{ user_run.run.name }}
             </h3>
             <!-- Add Run Date -->
-                <p><strong>Date:</strong> {{ user_run.run.start_date_local }}</p>
-            <p><strong>Distance:</strong> {{ user_run.run.distance / 1000 }} km</p>
+            <p><strong>Date:</strong> {{ user_run.run.start_date_local.strftime('%A, %B %d, %Y at %H:%M') }}</p>
+            <p><strong>Distance:</strong> {{ (user_run.run.distance / 1000)|round(2) }} km</p>
             <p><strong>Time:</strong> {{ user_run.run.moving_time // 60 }} min {{ user_run.run.moving_time % 60 }} sec</p>
             {% if user_run.coordinates and user_run.coordinates[0] %}
             <div id="map-feed-{{ loop.index }}" class="map-container"></div>

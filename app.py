@@ -162,11 +162,13 @@ def all_stats():
             if latest_run:
                 polyline_str = latest_run['map']['summary_polyline']
                 decoded_polyline = polyline.decode(polyline_str)
+                #latest_run['start_date_local'] = datetime.fromisoformat(latest_run['start_date_local'])
+                latest_run['start_date_local'] = datetime.strptime(latest_run['start_date_local'], '%Y-%m-%dT%H:%M:%SZ')
                 user_runs.append({'user': f"{athlete.get('firstname')} {athlete.get('lastname')}",
                                   "avatar": athlete.get("profile"),
                                   'run': latest_run,
                                   'coordinates': decoded_polyline})
-            print(user_runs)
+            #print(user_runs)
 
     # Sort runs by start_date most recent first
     sorted_runs = sorted(user_runs, key=lambda x: x['run']['start_date'], reverse=True)
